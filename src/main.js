@@ -1,4 +1,4 @@
-import{input,count,obtenerTareas,postTareas,marcarTarea,deleteTask} from './modular.js';
+import{input,count,obtenerTareas,postTareas,marcarTarea,deleteTask, searchTareas} from './modular.js';
 var mistareas= await obtenerTareas();
 
 
@@ -30,7 +30,13 @@ addBtn.addEventListener("click", (e) => {
   addTaskEvent();
 });
 
+var botonBuscar = document.getElementById("btnBuscar");
 
+var inputBuscar = document.getElementById("campoBuscar");
+
+inputBuscar.addEventListener("keyup",escribir)
+
+// Ejecuta mi funcion de tareas iniciales
 
 
 var listaTareaGlobal = [];
@@ -113,25 +119,7 @@ function addTask(text,idTarea,checktarea) {
     }
   }
 
-  if (text.trim().length === 0) {
-    Swal.fire({
-      title: 'Porfavor agrega una tarea',
-      showClass: {
-        popup: 'animate__animated animate__fadeInDown'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__fadeOutUp'
-      }
-    });
-  } else if (ExisteTarea) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Esta tarea ya existe',
-      text: 'digita otra tarea',
-      footer: 'ʕ•́ᴥ•̀ʔっ'
-    });
     //check//
-  } else {
     var check = document.createElement("input");
     check.checked=checktarea;
     check.id=idTarea;
@@ -156,7 +144,7 @@ function addTask(text,idTarea,checktarea) {
     input.value = "";
     empty.style.display = "none";
   }
-}
+
 // elimina el boton//
 function addDeleteBtn(idTarea) {
   console.log("SOY EL ID RECIBIDO EN EL DELETE",idTarea)
@@ -180,5 +168,35 @@ function addDeleteBtn(idTarea) {
 
   return deleteBtn;
 }
+botonBuscar.addEventListener("click",escribir)
+ async function escribir (evento) {
+  evento.preventDefault();
+  ul.innerHTML = "";
 
+  //Tareas iniciales//=================================
+
+  listaTareaGlobal = await searchTareas(inputBuscar.value);
+  console.log(input.value)
+  console.log("Mi Lista al Iniciar la Aplicacion", listaTareaGlobal);
+  for (
+    let indiceTarea = 0;
+    indiceTarea < listaTareaGlobal.length;
+    indiceTarea++
+  ) {
+    const tarea = listaTareaGlobal[indiceTarea];
+    const textoTarea = tarea.task;
+
+    addTask(textoTarea, tarea.id, tarea.check);
+
+    console.log("Mensaje tarea ", textoTarea);
+
+    // if (listaTareaGlobal == crearTareasIniciales()) {
+
+    //   return true;
+    // }
+
+    // return false;
+  }
+  count();
+};
 crearTareasIniciales()

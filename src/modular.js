@@ -13,10 +13,21 @@ export  function count() {
     contaTarea.textContent = contador;
     return console.log(contador);
   }
-
-
+//buscar las tareas //
+  export async function searchTareas(textoBuscar) {
+    let promesaTareas = fetch(urlTareas);
+    let resultadoPromesa = await promesaTareas;
+    let datosTarea = await resultadoPromesa.json();
+  
+    let tareasFiltradas = datosTarea.filter((tarea)=>{
+      return tarea.task.includes(textoBuscar)
   
   
+    })
+    return tareasFiltradas;
+  }
+  
+  // url
 const urlTareas= "http://localhost:3000/api/task/"
 //get tareas
 export async function obtenerTareas(){
